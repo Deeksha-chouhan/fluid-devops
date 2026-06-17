@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: fluid-app
-        image: 9691427913/fluid-app:v3
+        image: 9691427913/fluid-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
