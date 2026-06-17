@@ -19,8 +19,8 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: REDIS_HOST
-          value: redis
+          - name: REDIS_HOST
+           value: redis
         readinessProbe:
           httpGet:
             path: /health
