@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Build and Push Docker Image
 
 on:
   push:
@@ -6,17 +6,21 @@ on:
       - main
 
 jobs:
-  build:
+  docker-build-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Build Docker Image
-      run: docker build -t fluid-app:latest ./app
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Verify Kubernetes Files
-      run: |
-        ls -l k8s
-        cat k8s/app-deployment.yaml
+    - name: Build Docker image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fluid-app:latest ./app
+
+    - name: Push Docker image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/fluid-app:latest
