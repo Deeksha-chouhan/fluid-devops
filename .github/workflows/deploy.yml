@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build Push and Deploy to Kubernetes
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker-build-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,15 @@ jobs:
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/fluid-app:latest
+
+    - name: Deploy to k3s Kubernetes on EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          sudo kubectl set image deployment/fluid-app fluid-app=${{ secrets.DOCKERHUB_USERNAME }}/fluid-app:latest
+          sudo kubectl rollout status deployment/fluid-app
+          sudo kubectl get pods
+          sudo kubectl get svc
