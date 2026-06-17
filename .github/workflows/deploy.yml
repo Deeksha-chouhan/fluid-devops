@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build Docker Image
 
 on:
   push:
@@ -14,4 +14,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build Docker Image
-      run: docker build -t fluid-app:v1 ./app
+      run: docker build -t fluid-app:latest ./app
+
+    - name: Verify Kubernetes Files
+      run: |
+        ls -l k8s
+        cat k8s/app-deployment.yaml
