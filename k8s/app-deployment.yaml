@@ -15,12 +15,18 @@ spec:
     spec:
       containers:
       - name: fluid-app
-        image: 9691427913/fluid-app:v2
+        image: 9691427913/fluid-app:v3
         ports:
         - containerPort: 5000
         env:
-          - name: REDIS_HOST
-           value: redis
+        - name: DB_HOST
+          value: mysql
+        - name: DB_USER
+          value: root
+        - name: DB_PASSWORD
+          value: rootpass
+        - name: DB_NAME
+          value: fluiddb
         readinessProbe:
           httpGet:
             path: /health
