@@ -1,0 +1,36 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluid-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fluid-app
+  template:
+    metadata:
+      labels:
+        app: fluid-app
+    spec:
+      containers:
+      - name: fluid-app
+        image: 9691427913/fluid-app:v1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: REDIS_HOST
+          value: redis
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
